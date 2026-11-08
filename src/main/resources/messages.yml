@@ -1,0 +1,62 @@
+# All text. Supports & colour codes (and &#RRGGBB on 1.16+). Set a message to "" to silence it.
+prefix: "&8[&6Armed&8] &7"
+
+no-permission: "&cYou do not have permission to do that."
+players-only: "&cOnly players can do that."
+unknown-gun: "&cUnknown gun '&f{gun}&c'."
+unknown-player: "&cPlayer '&f{player}&c' is not online."
+unknown-subcommand: "&cUnknown subcommand. Use &f/armed help&c."
+usage: "&cUsage: &f{usage}"
+not-in-game: "&cYou can only do that during a BedWars game."
+
+reloaded: "&aReloaded config, messages and {count} gun(s)."
+reload-failed: "&cReload failed: &f{error}"
+
+shop-status-owned: "&aYou already own this gun!"
+shop-status-refill: "&eClick to refill ammo &7({cost}&7)"
+shop-status-buy: "&aClick to purchase!"
+shop-status-poor: "&cYou cannot afford this!"
+shop-status-no-permission: "&cYou cannot buy this gun."
+shop-cost-free: "&aFree"
+
+bought: "&aYou bought the &r{name}&a!"
+refilled: "&aRefilled ammo for the &r{name}&a."
+already-owned: "&cYou already own the &r{name}&c."
+cannot-afford: "&cYou need {cost}&c to buy the &r{name}&c."
+inventory-full: "&cYour inventory is full."
+shop-no-guns: "&cThere are no guns in the shop."
+
+reloading: "&cReloading..."
+reload-done: "&aReloaded!"
+action-bar: "{name} &8| &e{ammo}&7/&e{clip}{reserve_suffix}"
+action-bar-reloading: "{name} &8| &cReloading..."
+action-bar-empty: "{name} &8| &cOut of ammo!"
+reserve-suffix: " &8| &7{reserve}"
+
+gave-gun: "&aGave the &r{name} &ato &f{player}&a."
+received-gun: "&aYou received the &r{name}&a."
+
+gun-list-header: "&6Guns &7({count})&6:"
+gun-list-entry: " &8- &f{id} &7({name}&7) &8| &c{damage} HP &8| &7{cost}"
+gun-info-header: "&6Gun &f{id}"
+gun-info-line: " &7{key}: &f{value}"
+
+gun-set: "&aSet &f{property} &aof &f{gun} &ato &f{value}&a."
+gun-set-invalid: "&cInvalid value: &f{error}"
+unknown-property: "&cUnknown property '&f{property}&c'. Use tab completion to see them."
+gun-created: "&aCreated gun &f{gun}&a. Edit it with &f/armed set {gun} <property> <value>&a."
+gun-exists: "&cA gun called '&f{gun}&c' already exists."
+gun-deleted: "&aDeleted gun &f{gun}&a."
+invalid-id: "&cGun ids may only contain letters, numbers, '-' and '_'."
+description-added: "&aAdded description line to &f{gun}&a."
+description-removed: "&aRemoved description line &f{index}&a from &f{gun}&a."
+description-cleared: "&aCleared the description of &f{gun}&a."
+description-bad-index: "&cThere is no description line {index}."
+need-item-in-hand: "&cHold an item in your hand first."
+
+config-value: "&6{path} &7= &f{value}"
+config-set: "&aSet &f{path} &ato &f{value}&a. Run &f/armed reload&a if it does not apply instantly."
+config-unknown-path: "&cNo setting at '&f{path}&c'."
+config-not-scalar: "&cThat setting is not a single value. Edit config.yml and use &f/armed reload&c."
+
+help-header: "&6BedWars1058-Armed &7- commands"

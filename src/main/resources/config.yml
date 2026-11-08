@@ -1,0 +1,126 @@
+# ============================================================================
+#  BedWars1058-Armed - main configuration
+#  Edit in game with /armed config <path> [value] and apply with /armed reload.
+#  Guns live in guns.yml, all text lives in messages.yml.
+# ============================================================================
+
+settings:
+  # true  = guns only work for living players in a BedWars1058 arena that is in the "playing" state.
+  # false = guns also work anywhere (handy for testing on a dev server).
+  require-bedwars-arena: true
+  # Outside an arena (require-bedwars-arena: false) bullets may hit any player.
+  outside-arena-pvp: true
+  friendly-fire: false
+  # Let bullets damage non-player living entities (BedWars silverfish / dream defenders).
+  hit-mobs: false
+  # Bullets ignore the 0.5s damage cooldown, so fast guns deal full damage on every shot.
+  ignore-damage-cooldown: true
+  # Extra blocks added around a player's hitbox (0.0 = vanilla hitbox). Makes aiming more forgiving.
+  hitbox-expand: 0.1
+  # Hits on the top X blocks of a player's body count as headshots (see headshot-multiplier on each gun).
+  head-height: 0.4
+  # Bullets stop at solid blocks.
+  block-collision: true
+  # Materials bullets fly through even though they are solid (example: [GLASS, STAINED_GLASS]).
+  pass-through-materials: []
+  # Players within this many blocks hear shots.
+  sound-radius: 24.0
+  # Right-click is sent by the client roughly every 0.2s while held, so holding fire = automatic fire.
+  # This many ms are subtracted from every fire-rate check so client/server tick jitter never eats a shot.
+  fire-rate-tolerance-ms: 30
+  # Press the drop key (Q) to reload. Guns can never be dropped while this is true.
+  reload-on-drop: true
+  reload-on-left-click: false
+  auto-reload: true
+  cancel-reload-on-switch: true
+  # Show reload progress on the experience bar.
+  reload-xp-bar: true
+  action-bar: true
+  # Right clicks with a gun in hand never place blocks or use items.
+  cancel-gun-interactions: true
+  debug: false
+
+hit-feedback:
+  hit-sound: "entity.arrow.hit_player 0.7 1.5"
+  headshot-sound: "entity.player.levelup 0.6 2.0"
+  kill-sound: "entity.experience_orb.pickup 0.8 1.0"
+
+# What the gun looks like in the inventory.
+item:
+  name-format: "{name} &8[&e{ammo}&7/&e{clip}&8]"
+  # Used when the gun has a limited reserve (reserve-ammo >= 0).
+  name-format-reserve: "{name} &8[&e{ammo}&7/&e{clip} &8| &7{reserve}&8]"
+  reloading-name-format: "{name} &c[Reloading]"
+  lore:
+    - "{description}"
+    - ""
+    - "&7Damage: &c{damage} HP{pellets_suffix}"
+    - "&7Fire rate: &f{fire_rate}s"
+    - "&7Reload: &f{reload}s"
+    - "&7Range: &f{range} m"
+    - ""
+    - "&eRight-click &7to shoot"
+    - "&eDrop (Q) &7to reload"
+
+# The item players use to open the gun shop (also available as /armed shop).
+shop-item:
+  enabled: true
+  slot: 8
+  material: NETHER_STAR
+  name: "&6&lGun Shop &7(Right Click)"
+  lore:
+    - "&7Buy guns with your resources."
+  give-on-spawn: true
+  give-on-respawn: true
+
+shop:
+  title: "&8Armed - Gun Shop"
+  # 1-6. Grows automatically when a gun is placed in a lower row.
+  rows: 3
+  close-on-buy: false
+  filler:
+    enabled: true
+    material: GRAY_STAINED_GLASS_PANE
+    name: " "
+  close-button:
+    enabled: true
+    slot: 22
+    material: BARRIER
+    name: "&cClose"
+  # Shown on every gun in the shop. {description} expands to the gun's description lines
+  # and {status} to one of the shop-status-* lines from messages.yml.
+  lore:
+    - "{description}"
+    - ""
+    - "&7Damage: &c{damage} HP{pellets_suffix}"
+    - "&7Fire rate: &f{fire_rate}s"
+    - "&7Clip size: &f{clip}"
+    - "&7Reload: &f{reload}s"
+    - "&7Range: &f{range} m"
+    - ""
+    - "&7Duel: &f{duel}"
+    - "&7Horde: &f{horde}"
+    - "&7Skill ceiling: &f{skill}"
+    - ""
+    - "&7Cost: {cost}"
+    - "{status}"
+
+# Resources guns can cost. Add your own: key -> item material + display name.
+# BedWars1058's own generators drop iron / gold / diamond / emerald, so these map 1:1.
+currencies:
+  iron:
+    material: IRON_INGOT
+    display: "&fIron"
+  gold:
+    material: GOLD_INGOT
+    display: "&6Gold"
+  diamond:
+    material: DIAMOND
+    display: "&bDiamond"
+  emerald:
+    material: EMERALD
+    display: "&aEmerald"
+
+sounds:
+  purchase: "entity.experience_orb.pickup 0.8 1.2"
+  error: "entity.villager.no 0.8 1.0"

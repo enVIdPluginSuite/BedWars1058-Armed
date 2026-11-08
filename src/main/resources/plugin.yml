@@ -1,0 +1,38 @@
+name: BedWars1058-Armed
+version: '${version}'
+main: dev.etran.armed.ArmedPlugin
+# Ignored by 1.8-1.12 servers; on 1.13+ it switches off legacy material handling.
+api-version: '1.13'
+description: Armed Bedwars (Hypixel "Armed" dream mode) for BedWars1058 - guns, gun shop, fully configurable.
+author: Armed
+depend: [BedWars1058]
+
+commands:
+  armed:
+    description: BedWars1058-Armed main command
+    usage: /<command> help
+    aliases: [guns, gunshop, bwarmed]
+
+permissions:
+  armed.use:
+    description: Use guns and open the gun shop
+    default: true
+  armed.shop:
+    description: Open the gun shop with /armed shop
+    default: true
+  armed.admin:
+    description: Manage guns and configuration in game
+    default: op
+    children:
+      armed.admin.reload: true
+      armed.admin.give: true
+      armed.admin.edit: true
+  armed.admin.reload:
+    description: /armed reload
+    default: op
+  armed.admin.give:
+    description: /armed give
+    default: op
+  armed.admin.edit:
+    description: /armed set, create, delete, description, config
+    default: op

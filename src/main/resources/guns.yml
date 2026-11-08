@@ -1,0 +1,299 @@
+# ============================================================================
+#  Guns. Stats are taken from the Hypixel Armed Bedwars guide. Everything here can also be changed
+#  in game:  /armed set <gun> <property> <value>   /armed create <id>   /armed delete <id>
+#  Note: in-game edits rewrite this file, older server versions will drop these comments when saving.
+#
+#  Property reference (every key is optional, missing keys use the defaults shown for 'pistol'):
+#    display-name   Name shown on the item / in the shop (& colour codes).
+#    material       Item material. Old/new names both work (WOODEN_HOE or WOOD_HOE).
+#    description    Lore lines shown in {description}.
+#    starter        true = given for free at spawn/respawn.
+#    permission     Optional permission needed to buy ('' = none).
+#    hotbar-slot    0-8 preferred slot on purchase, -1 = first free hotbar slot.
+#    stats.damage              HP of damage per pellet (2.0 HP = 1 heart), before armor.
+#    stats.headshot-multiplier 1.0 = no bonus.
+#    stats.fire-rate           Seconds between shots.
+#    stats.burst-size          Shots fired per trigger pull, spaced by fire-rate. Useful for guns with a
+#                              fire-rate below 0.2s, because a held right-click arrives every ~0.2s.
+#    stats.clip-size / reload-time / range (blocks)
+#    stats.reserve-ammo        -1 = unlimited, otherwise the rounds you carry besides the clip.
+#    stats.pellets             Bullets per shot (shotgun). Ammo use is still 1 per shot.
+#    stats.spread              Random cone in degrees.
+#    stats.knockback           Extra push along the bullet direction.
+#    stats.fire-ticks          Sets the target on fire for this long (20 ticks = 1s). Reveals invisible players.
+#    cost.currency / amount    Currency key from config.yml. Amount 0 = free.
+#    shop.enabled / slot       Shown in the shop; slot -1 = first free slot.
+#    ratings                   Display only (shown in the shop).
+#    sounds.*                  "<sound key> <volume> <pitch>", e.g. "entity.arrow.shoot 1.0 1.5".
+#                              Use the modern namespaced key. Old servers get an automatic translation for
+#                              common keys, anything else is passed through as written.
+#    trail                     Bullet tracer. particle: name from org.bukkit.Particle, or 'none'.
+# ============================================================================
+guns:
+  pistol:
+    display-name: "&fPistol"
+    material: WOODEN_HOE
+    description:
+      - "&7The starting weapon everyone gets."
+      - "&7Decent up close and mid range, but"
+      - "&7easily outclassed. A fine backup gun."
+    starter: true
+    permission: ""
+    hotbar-slot: 1
+    stats:
+      damage: 4.0
+      headshot-multiplier: 1.0
+      fire-rate: 0.4
+      burst-size: 1
+      clip-size: 12
+      reload-time: 1.5
+      reserve-ammo: -1
+      range: 30.0
+      pellets: 1
+      spread: 0.0
+      knockback: 0.0
+      fire-ticks: 0
+    cost:
+      currency: iron
+      amount: 0
+    shop:
+      enabled: true
+      slot: 10
+    ratings:
+      duel: Medium
+      horde: Medium
+      skill: Medium
+    sounds:
+      shoot: "entity.arrow.shoot 0.8 1.6"
+      reload-start: "block.piston.contract 0.5 2.0"
+      reload-end: "block.piston.extend 0.5 2.0"
+      empty: "block.dispenser.fail 0.8 1.5"
+    trail:
+      particle: SMOKE_NORMAL
+      step: 2.0
+      count: 1
+      spread: 0.0
+
+  magnum:
+    display-name: "&6Magnum"
+    material: IRON_HOE
+    description:
+      - "&7Highest damage per shot. Wins duels"
+      - "&7but needs good aim and cover."
+      - "&7Highest skill ceiling in the game."
+    starter: false
+    permission: ""
+    hotbar-slot: -1
+    stats:
+      damage: 6.0
+      headshot-multiplier: 1.0
+      fire-rate: 0.6
+      burst-size: 1
+      clip-size: 6
+      reload-time: 3.0
+      reserve-ammo: -1
+      range: 40.0
+      pellets: 1
+      spread: 0.0
+      knockback: 0.0
+      fire-ticks: 0
+    cost:
+      currency: gold
+      amount: 6
+    shop:
+      enabled: true
+      slot: 11
+    ratings:
+      duel: High
+      horde: Low
+      skill: High
+    sounds:
+      shoot: "entity.generic.explode 0.6 1.9"
+      reload-start: "block.piston.contract 0.5 1.6"
+      reload-end: "block.piston.extend 0.5 1.6"
+      empty: "block.dispenser.fail 0.8 1.5"
+    trail:
+      particle: CRIT
+      step: 1.5
+      count: 1
+      spread: 0.0
+
+  rifle:
+    display-name: "&aRifle"
+    material: DIAMOND_HOE
+    description:
+      - "&7Versatile and forgiving. Good at every"
+      - "&7range and great for map control."
+      - "&7The most popular choice."
+    starter: false
+    permission: ""
+    hotbar-slot: -1
+    stats:
+      damage: 4.0
+      headshot-multiplier: 1.0
+      fire-rate: 0.2
+      burst-size: 1
+      clip-size: 25
+      reload-time: 3.0
+      reserve-ammo: -1
+      range: 40.0
+      pellets: 1
+      spread: 0.0
+      knockback: 0.0
+      fire-ticks: 0
+    cost:
+      currency: gold
+      amount: 8
+    shop:
+      enabled: true
+      slot: 12
+    ratings:
+      duel: High
+      horde: High
+      skill: Low
+    sounds:
+      shoot: "entity.arrow.shoot 0.8 1.3"
+      reload-start: "block.piston.contract 0.5 1.4"
+      reload-end: "block.piston.extend 0.5 1.4"
+      empty: "block.dispenser.fail 0.8 1.5"
+    trail:
+      particle: CRIT
+      step: 2.0
+      count: 1
+      spread: 0.0
+
+  smg:
+    display-name: "&bSMG"
+    material: STONE_HOE
+    description:
+      - "&7High DPS at short range. Shreds players"
+      - "&7caught in the open but loses to"
+      - "&7longer-range guns."
+    starter: false
+    permission: ""
+    hotbar-slot: -1
+    stats:
+      damage: 2.0
+      headshot-multiplier: 1.0
+      # Advertised as 0.1s but fires at 0.2s in practice, which is also how often a held right-click arrives.
+      fire-rate: 0.2
+      burst-size: 1
+      clip-size: 45
+      reload-time: 2.0
+      reserve-ammo: -1
+      range: 30.0
+      pellets: 1
+      spread: 1.0
+      knockback: 0.0
+      fire-ticks: 0
+    cost:
+      currency: iron
+      amount: 50
+    shop:
+      enabled: true
+      slot: 13
+    ratings:
+      duel: Medium
+      horde: Medium
+      skill: Low
+    sounds:
+      shoot: "entity.arrow.shoot 0.6 1.9"
+      reload-start: "block.piston.contract 0.5 1.8"
+      reload-end: "block.piston.extend 0.5 1.8"
+      empty: "block.dispenser.fail 0.8 1.5"
+    trail:
+      particle: SMOKE_NORMAL
+      step: 2.0
+      count: 1
+      spread: 0.0
+
+  flamethrower:
+    display-name: "&cFlamethrower"
+    material: BLAZE_ROD
+    description:
+      - "&7Highest sustained DPS, but only 20 blocks"
+      - "&7of range. Best paired with invisibility to"
+      - "&7secure finals. Sets targets on fire."
+    starter: false
+    permission: ""
+    hotbar-slot: -1
+    stats:
+      damage: 2.0
+      headshot-multiplier: 1.0
+      # 0.1s fire rate: two shots per right-click pull (a held click arrives every ~0.2s).
+      fire-rate: 0.1
+      burst-size: 2
+      clip-size: 50
+      reload-time: 3.0
+      reserve-ammo: -1
+      range: 20.0
+      pellets: 1
+      spread: 2.0
+      knockback: 0.0
+      fire-ticks: 40
+    cost:
+      currency: gold
+      amount: 12
+    shop:
+      enabled: true
+      slot: 14
+    ratings:
+      duel: Medium (Extreme with invis)
+      horde: Medium (Extreme with invis)
+      skill: Low
+    sounds:
+      shoot: "item.firecharge.use 0.5 1.4"
+      reload-start: "block.piston.contract 0.5 1.0"
+      reload-end: "block.piston.extend 0.5 1.0"
+      empty: "block.dispenser.fail 0.8 1.5"
+    trail:
+      particle: FLAME
+      step: 0.7
+      count: 2
+      spread: 0.08
+
+  shotgun:
+    display-name: "&5Shotgun"
+    material: GOLDEN_HOE
+    description:
+      - "&7Massive burst damage at point blank."
+      - "&7Needs invisibility to get close enough."
+      - "&7Great for cleaning up final kills."
+    starter: false
+    permission: ""
+    hotbar-slot: -1
+    stats:
+      damage: 2.0
+      headshot-multiplier: 1.0
+      fire-rate: 1.0
+      burst-size: 1
+      clip-size: 4
+      reload-time: 4.0
+      reserve-ammo: -1
+      range: 10.0
+      # 14 pellets x 2.0 HP is enough to one-shot a player in leather armor at point blank.
+      # Raise or lower 'pellets' to taste.
+      pellets: 14
+      spread: 5.0
+      knockback: 0.6
+      fire-ticks: 0
+    cost:
+      currency: emerald
+      amount: 1
+    shop:
+      enabled: true
+      slot: 15
+    ratings:
+      duel: Low (Extreme with invis)
+      horde: Low (High with invis)
+      skill: Medium
+    sounds:
+      shoot: "entity.generic.explode 0.8 1.4"
+      reload-start: "block.piston.contract 0.5 0.8"
+      reload-end: "block.piston.extend 0.5 0.8"
+      empty: "block.dispenser.fail 0.8 1.5"
+    trail:
+      particle: none
+      step: 1.0
+      count: 1
+      spread: 0.0
