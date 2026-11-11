@@ -70,3 +70,9 @@ Compiled against Spigot 1.8.8 and written to avoid APIs that differ between vers
 * bullets are hitscan rays, not projectile entities
 
 Limits: bullets stop at any solid block (use `settings.pass-through-materials` for glass etc.), hitboxes are 0.6 x 1.8 (1.5 sneaking) plus `settings.hitbox-expand`, and in-game edits rewrite the YAML (comments are kept only on servers whose YAML API preserves them, 1.18.2+).
+
+## Developer note
+This plugin is coded with AI assistance and architected completely by me. Regardless, use at your own risk.
+
+## License
+This plugin is under the MIT License, check the [License](LICENSE) file for more details.
