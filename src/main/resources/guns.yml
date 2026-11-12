@@ -27,6 +27,9 @@
 #    sounds.*                  "<sound key> <volume> <pitch>", e.g. "entity.arrow.shoot 1.0 1.5".
 #                              Use the modern namespaced key. Old servers get an automatic translation for
 #                              common keys, anything else is passed through as written.
+#    ammo-item                 Optional (off by default). enabled: true makes reloading cost items from the player's
+#                              inventory instead of being free: material is any item (IRON_INGOT, DIAMOND, WOOL, ARROW...),
+#                              rounds-per-item how many bullets one item is worth. Use reserve-ammo: -1 with it.
 #    trail                     Bullet tracer. particle: name from org.bukkit.Particle, or 'none'.
 # ============================================================================
 guns:
@@ -68,6 +71,10 @@ guns:
       reload-start: "block.piston.contract 0.5 2.0"
       reload-end: "block.piston.extend 0.5 2.0"
       empty: "block.dispenser.fail 0.8 1.5"
+    ammo-item:
+      enabled: false
+      material: IRON_INGOT
+      rounds-per-item: 6
     trail:
       particle: SMOKE_NORMAL
       step: 2.0
@@ -112,6 +119,10 @@ guns:
       reload-start: "block.piston.contract 0.5 1.6"
       reload-end: "block.piston.extend 0.5 1.6"
       empty: "block.dispenser.fail 0.8 1.5"
+    ammo-item:
+      enabled: false
+      material: GOLD_INGOT
+      rounds-per-item: 3
     trail:
       particle: CRIT
       step: 1.5
@@ -156,6 +167,10 @@ guns:
       reload-start: "block.piston.contract 0.5 1.4"
       reload-end: "block.piston.extend 0.5 1.4"
       empty: "block.dispenser.fail 0.8 1.5"
+    ammo-item:
+      enabled: false
+      material: GOLD_INGOT
+      rounds-per-item: 5
     trail:
       particle: CRIT
       step: 2.0
@@ -201,6 +216,10 @@ guns:
       reload-start: "block.piston.contract 0.5 1.8"
       reload-end: "block.piston.extend 0.5 1.8"
       empty: "block.dispenser.fail 0.8 1.5"
+    ammo-item:
+      enabled: false
+      material: IRON_INGOT
+      rounds-per-item: 15
     trail:
       particle: SMOKE_NORMAL
       step: 2.0
@@ -246,6 +265,10 @@ guns:
       reload-start: "block.piston.contract 0.5 1.0"
       reload-end: "block.piston.extend 0.5 1.0"
       empty: "block.dispenser.fail 0.8 1.5"
+    ammo-item:
+      enabled: false
+      material: GOLD_INGOT
+      rounds-per-item: 10
     trail:
       particle: FLAME
       step: 0.7
@@ -292,6 +315,10 @@ guns:
       reload-start: "block.piston.contract 0.5 0.8"
       reload-end: "block.piston.extend 0.5 0.8"
       empty: "block.dispenser.fail 0.8 1.5"
+    ammo-item:
+      enabled: false
+      material: EMERALD
+      rounds-per-item: 2
     trail:
       particle: none
       step: 1.0

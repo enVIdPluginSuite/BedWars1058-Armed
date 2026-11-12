@@ -38,10 +38,17 @@ class GunDefinition(
     val trailParticle: String,
     val trailStep: Double,
     val trailCount: Int,
-    val trailSpread: Double
+    val trailSpread: Double,
+    val ammoItemEnabled: Boolean,
+    val ammoItemMaterial: String,
+    val ammoRoundsPerItem: Int
 ) {
     val reserveLimited: Boolean get() = reserveAmmo >= 0
     val free: Boolean get() = costAmount <= 0
+
+    /** The ammo item as a readable name, e.g. IRON_INGOT -> "Iron Ingot". */
+    val ammoItemLabel: String
+        get() = ammoItemMaterial.substringBefore(':').lowercase().split('_').joinToString(" ") { w -> w.replaceFirstChar { it.uppercase() } }
 
     /** Milliseconds between trigger pulls: one fire-rate interval per shot in the burst. */
     val triggerCooldownMs: Long get() = (fireRate * 1000.0 * burstSize).toLong()
@@ -86,7 +93,10 @@ class GunDefinition(
             trailParticle = s.getString("trail.particle") ?: "none",
             trailStep = s.getDouble("trail.step", 2.0).coerceIn(0.2, 20.0),
             trailCount = s.getInt("trail.count", 1).coerceIn(1, 50),
-            trailSpread = s.getDouble("trail.spread", 0.0).coerceIn(0.0, 2.0)
+            trailSpread = s.getDouble("trail.spread", 0.0).coerceIn(0.0, 2.0),
+            ammoItemEnabled = s.getBoolean("ammo-item.enabled", false),
+            ammoItemMaterial = s.getString("ammo-item.material") ?: "IRON_INGOT",
+            ammoRoundsPerItem = s.getInt("ammo-item.rounds-per-item", 5).coerceAtLeast(1)
         )
     }
 }

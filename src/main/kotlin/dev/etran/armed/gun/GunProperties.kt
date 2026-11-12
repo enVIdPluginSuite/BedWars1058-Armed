@@ -46,7 +46,10 @@ object GunProperties {
         GunProperty("trail-particle", "trail.particle", PropType.STRING),
         GunProperty("trail-step", "trail.step", PropType.DOUBLE, 0.2, 20.0),
         GunProperty("trail-count", "trail.count", PropType.INT, 1.0, 50.0),
-        GunProperty("trail-spread", "trail.spread", PropType.DOUBLE, 0.0, 2.0)
+        GunProperty("trail-spread", "trail.spread", PropType.DOUBLE, 0.0, 2.0),
+        GunProperty("ammo-item-enabled", "ammo-item.enabled", PropType.BOOL),
+        GunProperty("ammo-item-material", "ammo-item.material", PropType.MATERIAL),
+        GunProperty("ammo-item-rounds", "ammo-item.rounds-per-item", PropType.INT, 1.0, 10000.0)
     )
 
     private val byName = all.associateBy { it.name }

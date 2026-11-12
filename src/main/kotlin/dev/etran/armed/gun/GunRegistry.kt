@@ -26,6 +26,9 @@ class GunRegistry(private val plugin: ArmedPlugin) {
                     if (Mats.resolve(g.material.substringBefore(':')) == null) {
                         plugin.logger.warning("Gun '$id': unknown material '${g.material}', using a stick.")
                     }
+                    if (g.ammoItemEnabled && Mats.resolve(g.ammoItemMaterial.substringBefore(':')) == null) {
+                        plugin.logger.warning("Gun '$id': unknown ammo item '${g.ammoItemMaterial}', ammo items are off for it.")
+                    }
                     if (!g.free && plugin.currencies.get(g.costCurrency) == null) {
                         plugin.logger.warning("Gun '$id': unknown currency '${g.costCurrency}', the gun will be free.")
                     }
