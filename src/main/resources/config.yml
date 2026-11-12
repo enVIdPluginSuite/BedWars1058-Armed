@@ -70,17 +70,6 @@ item:
     - "&eRight-click &7to shoot"
     - "&eDrop (Q) &7to reload"
 
-# The item players use to open the gun shop (also available as /armed shop).
-shop-item:
-  enabled: true
-  slot: 8
-  material: NETHER_STAR
-  name: "&6&lGun Shop &7(Right Click)"
-  lore:
-    - "&7Buy guns with your resources."
-  give-on-spawn: true
-  give-on-respawn: true
-
 # The gun shop is a button inside the BedWars1058 item shop (main page and every category page).
 # Players can also open it with /armed shop.
 shop-button:

@@ -1,7 +1,6 @@
 package dev.etran.armed.combat
 
 import dev.etran.armed.ArmedPlugin
-import dev.etran.armed.gun.GunItems
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
@@ -25,7 +24,7 @@ class GunListener(private val plugin: ArmedPlugin) : Listener {
         if (action == Action.PHYSICAL) return
         val player = e.player
         val inv = player.inventory
-        val id = plugin.items.identify(inv.getItem(inv.heldItemSlot)) ?: return
+        plugin.items.identify(inv.getItem(inv.heldItemSlot)) ?: return
 
         val right = action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK
         val now = System.nanoTime()
@@ -35,14 +34,6 @@ class GunListener(private val plugin: ArmedPlugin) : Listener {
             return
         }
         lastClick[player.uniqueId] = now
-
-        if (id == GunItems.SHOP_ID) {
-            if (right) {
-                e.isCancelled = true
-                plugin.shop.open(player)
-            }
-            return
-        }
 
         if (right) {
             if (plugin.settings.cancelGunInteractions) e.isCancelled = true
@@ -56,7 +47,7 @@ class GunListener(private val plugin: ArmedPlugin) : Listener {
     fun onDrop(e: PlayerDropItemEvent) {
         val id = plugin.items.identify(e.itemDrop.itemStack) ?: return
         e.isCancelled = true
-        if (id != GunItems.SHOP_ID && plugin.settings.reloadOnDrop) {
+        if (plugin.settings.reloadOnDrop) {
             val held = plugin.controller.held(e.player)
             if (held != null && held.second.id == id) plugin.controller.reload(e.player)
         }

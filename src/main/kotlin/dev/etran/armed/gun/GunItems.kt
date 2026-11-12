@@ -20,7 +20,6 @@ import java.lang.reflect.Method
  */
 class GunItems(private val plugin: ArmedPlugin) {
     companion object {
-        const val SHOP_ID = "_shop"
         private const val CC = '§'
         private val MARK = "${CC}r${CC}0${CC}a${CC}r"
         private const val HEX = "0123456789abcdef"
@@ -66,7 +65,7 @@ class GunItems(private val plugin: ArmedPlugin) {
 
     fun isEmpty(item: ItemStack?): Boolean = item == null || item.type.name.endsWith("AIR")
 
-    /** Returns the gun id or [SHOP_ID] stored on [item], or null for any other item. */
+    /** Returns the gun id stored on [item], or null for any other item. */
     fun identify(item: ItemStack?): String? {
         if (isEmpty(item) || !item!!.hasItemMeta()) return null
         val meta = item.itemMeta ?: return null
@@ -82,11 +81,8 @@ class GunItems(private val plugin: ArmedPlugin) {
     }
 
     fun gunOf(item: ItemStack?): GunDefinition? {
-        val id = identify(item) ?: return null
-        return if (id == SHOP_ID) null else plugin.registry.get(id)
+        return plugin.registry.get(identify(item) ?: return null)
     }
-
-    fun isShopItem(item: ItemStack?): Boolean = identify(item) == SHOP_ID
 
     private fun encodeMarker(id: String): String {
         val sb = StringBuilder(MARK)
@@ -117,11 +113,6 @@ class GunItems(private val plugin: ArmedPlugin) {
 
     private fun matchByName(item: ItemStack, name: String): String? {
         val plain = Text.strip(name)
-        val shopName = Text.strip(plugin.configs.config.getString("shop-item.name"))
-        if (shopName.isNotEmpty() && (plain == shopName || plain.startsWith("$shopName "))) {
-            val shopMat = Mats.resolve(plugin.configs.config.getString("shop-item.material"))
-            if (shopMat == null || shopMat == item.type) return SHOP_ID
-        }
         var best: GunDefinition? = null
         var bestLen = -1
         for (g in plugin.registry.all()) {
@@ -176,23 +167,6 @@ class GunItems(private val plugin: ArmedPlugin) {
         return stack
     }
 
-    fun createShopItem(): ItemStack {
-        val cfg = plugin.configs.config
-        val stack = Mats.stack(cfg.getString("shop-item.material"), 1, "NETHER_STAR")
-        val meta = stack.itemMeta ?: return stack
-        var name = Text.color(cfg.getString("shop-item.name") ?: "&6Gun Shop")
-        if (useMarker) name += encodeMarker(SHOP_ID)
-        meta.displayName = name
-        meta.lore = cfg.getStringList("shop-item.lore").map { Text.color(it) }
-        hideFlags(meta)
-        try {
-            pdc?.set(meta, SHOP_ID)
-        } catch (_: Throwable) {
-        }
-        stack.itemMeta = meta
-        return stack
-    }
-
     // ---------------------------------------------------------------- updates
 
     /** Rewrites only the display name of the gun in [slot] (ammo counter / reloading tag). */
@@ -206,7 +180,7 @@ class GunItems(private val plugin: ArmedPlugin) {
         player.inventory.setItem(slot, item)
     }
 
-    /** Rebuilds every gun / shop item of every online player after a config change. Ammo is kept. */
+    /** Rebuilds every gun item of every online player after a config change. Ammo is kept. */
     fun refreshAll() {
         for (player in plugin.server.onlinePlayers) {
             val inv = player.inventory
@@ -214,11 +188,6 @@ class GunItems(private val plugin: ArmedPlugin) {
             for (slot in 0 until inv.size) {
                 val item = inv.getItem(slot) ?: continue
                 val id = identify(item) ?: continue
-                if (id == SHOP_ID) {
-                    inv.setItem(slot, createShopItem())
-                    changed = true
-                    continue
-                }
                 val gun = plugin.registry.get(id) ?: continue
                 val state = plugin.states.get(player, gun)
                 val fresh = createGun(gun, state)

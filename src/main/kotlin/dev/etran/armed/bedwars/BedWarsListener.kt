@@ -12,22 +12,22 @@ import org.bukkit.event.Listener
 class BedWarsListener(private val plugin: dev.etran.armed.ArmedPlugin) : Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
-    fun onFirstSpawn(e: PlayerFirstSpawnEvent) = loadout(e.player, false)
+    fun onFirstSpawn(e: PlayerFirstSpawnEvent) = loadout(e.player)
 
     @EventHandler(priority = EventPriority.MONITOR)
-    fun onRespawn(e: PlayerReSpawnEvent) = loadout(e.player, true)
+    fun onRespawn(e: PlayerReSpawnEvent) = loadout(e.player)
 
     @EventHandler(priority = EventPriority.MONITOR)
     fun onLeave(e: PlayerLeaveArenaEvent) {
         plugin.states.clear(e.player, false)
     }
 
-    private fun loadout(player: Player, respawn: Boolean) {
+    private fun loadout(player: Player) {
         // BedWars1058 fills the inventory right around these events, so wait one tick.
         plugin.server.scheduler.runTaskLater(plugin, Runnable {
             if (player.isOnline && plugin.controller.canUse(player)) {
                 plugin.states.clear(player, false)
-                plugin.controller.giveLoadout(player, respawn)
+                plugin.controller.giveLoadout(player)
             }
         }, 2L)
     }

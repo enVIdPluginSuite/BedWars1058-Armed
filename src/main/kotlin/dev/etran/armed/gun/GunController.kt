@@ -244,22 +244,10 @@ class GunController(private val plugin: ArmedPlugin) {
         return ok
     }
 
-    fun giveShopItem(player: Player) {
-        val cfg = plugin.configs.config
-        if (!cfg.getBoolean("shop-item.enabled", true)) return
-        val inv = player.inventory
-        for (i in 0 until inv.size) {
-            if (plugin.items.isShopItem(inv.getItem(i))) return
-        }
-        place(player, plugin.items.createShopItem(), cfg.getInt("shop-item.slot", 8))
-    }
-
-    /** Starter guns + shop item, called after (re)spawn. */
-    fun giveLoadout(player: Player, respawn: Boolean) {
+    /** Starter guns, called after (re)spawn. */
+    fun giveLoadout(player: Player) {
         for (gun in plugin.registry.all()) {
             if (gun.starter && !owns(player, gun)) giveGun(player, gun)
         }
-        val key = if (respawn) "shop-item.give-on-respawn" else "shop-item.give-on-spawn"
-        if (plugin.configs.config.getBoolean(key, true)) giveShopItem(player)
     }
 }
