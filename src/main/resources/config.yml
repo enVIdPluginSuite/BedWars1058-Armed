@@ -4,6 +4,14 @@
 #  Guns live in guns.yml, all text lives in messages.yml.
 # ============================================================================
 
+# Armed mode ONLY runs in the arena groups listed here, and nowhere else (empty = Armed is off everywhere).
+# Under each group list the maps (arena names) it applies to; an empty list [] means every map of that group.
+# Names ignore case. Manage in game with /armed groups.
+#   arena-groups:
+#     Armed: []            # every map in the "Armed" group
+#     Dream: [Aquarium]    # only the map "Aquarium" in the "Dream" group
+arena-groups: {}
+
 settings:
   # true  = guns only work for living players in a BedWars1058 arena that is in the "playing" state.
   # false = guns also work anywhere (handy for testing on a dev server).

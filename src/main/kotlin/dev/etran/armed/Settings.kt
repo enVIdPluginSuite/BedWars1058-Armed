@@ -7,6 +7,20 @@ import org.bukkit.configuration.file.FileConfiguration
 
 /** Snapshot of the values from config.yml that are read on hot paths. Rebuilt on every reload. */
 class Settings(c: FileConfiguration) {
+    /**
+     * Armed mode applies ONLY to these BedWars1058 arena groups (lower-case name -> lower-case map names).
+     * An empty map set means every map of that group. No entries at all means Armed is off everywhere.
+     */
+    val arenaGroups: Map<String, Set<String>> = run {
+        val out = LinkedHashMap<String, Set<String>>()
+        val sec = c.getConfigurationSection("arena-groups")
+        if (sec != null) {
+            for (g in sec.getKeys(false)) {
+                out[g.lowercase()] = sec.getStringList(g).map { it.trim().lowercase() }.filter { it.isNotEmpty() }.toSet()
+            }
+        }
+        out
+    }
     val requireArena = c.getBoolean("settings.require-bedwars-arena", true)
     val outsideArenaPvp = c.getBoolean("settings.outside-arena-pvp", true)
     val friendlyFire = c.getBoolean("settings.friendly-fire", false)

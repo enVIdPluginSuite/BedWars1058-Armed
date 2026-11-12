@@ -17,7 +17,11 @@ class GunController(private val plugin: ArmedPlugin) {
     /** Whether [player] may use guns / the shop right now. */
     fun canUse(player: Player): Boolean {
         val arena = BedWarsHook.arenaOf(player)
-        if (arena != null) return BedWarsHook.isPlaying(arena) && !arena.isSpectator(player)
+        if (arena != null) {
+            val maps = plugin.settings.arenaGroups[(arena.group ?: "").lowercase()] ?: return false
+            if (maps.isNotEmpty() && !maps.contains((arena.arenaName ?: "").lowercase())) return false
+            return BedWarsHook.isPlaying(arena) && !arena.isSpectator(player)
+        }
         return !plugin.settings.requireArena
     }
 

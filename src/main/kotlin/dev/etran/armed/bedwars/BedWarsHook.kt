@@ -20,6 +20,22 @@ object BedWarsHook {
 
     fun arenaOf(player: Player): IArena? = api?.arenaUtil?.getArenaByPlayer(player)
 
+    /** Names of all arena groups currently known to BedWars1058 (for tab completion). */
+    fun groups(): Set<String> =
+        try {
+            api?.arenaUtil?.arenas?.mapNotNull { it.group }?.toSet() ?: emptySet()
+        } catch (_: Throwable) {
+            emptySet()
+        }
+
+    /** Names of the maps (arenas) in [group], for tab completion. */
+    fun maps(group: String): List<String> =
+        try {
+            api?.arenaUtil?.arenas?.filter { it.group.equals(group, true) }?.map { it.arenaName } ?: emptyList()
+        } catch (_: Throwable) {
+            emptyList()
+        }
+
     fun isPlaying(arena: IArena): Boolean = arena.status == GameState.playing
 
     /** True when [a] and [b] are on the same BedWars team. */

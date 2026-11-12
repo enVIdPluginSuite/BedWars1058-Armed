@@ -14,7 +14,7 @@ class ArmedCommand(private val plugin: ArmedPlugin) : CommandExecutor, TabComple
     private val m get() = plugin.messages
 
     private val subcommands = listOf(
-        "help", "shop", "list", "info", "give", "reload", "set", "create", "delete", "description", "config"
+        "help", "shop", "list", "info", "give", "reload", "set", "create", "delete", "description", "groups", "config"
     )
 
     private fun perm(sender: CommandSender, node: String): Boolean {
@@ -47,6 +47,7 @@ class ArmedCommand(private val plugin: ArmedPlugin) : CommandExecutor, TabComple
             "create" -> if (perm(sender, "armed.admin.edit")) create(sender, args, label)
             "delete" -> if (perm(sender, "armed.admin.edit")) delete(sender, args, label)
             "description", "desc" -> if (perm(sender, "armed.admin.edit")) description(sender, args, label)
+            "groups" -> if (perm(sender, "armed.admin.edit")) groups(sender, args, label)
             "config" -> if (perm(sender, "armed.admin.edit")) config(sender, args, label)
             else -> m.send(sender, "unknown-subcommand")
         }
@@ -69,6 +70,7 @@ class ArmedCommand(private val plugin: ArmedPlugin) : CommandExecutor, TabComple
             "create <id> [copyFrom]" to "Create a new gun, optionally copied from another",
             "delete <id>" to "Delete a gun",
             "description <gun> add|remove|clear [text]" to "Edit the gun description lines",
+            "groups list|add|remove <group> [map]" to "Choose the arena groups / maps Armed mode runs in",
             "config <path> [value]" to "View or change a setting from config.yml"
         )
         for ((cmd, desc) in lines) {
@@ -186,6 +188,75 @@ class ArmedCommand(private val plugin: ArmedPlugin) : CommandExecutor, TabComple
         }
     }
 
+    private fun groups(sender: CommandSender, args: Array<String>, label: String) {
+        val cfg = plugin.configs.config
+        val action = args.getOrNull(1)?.lowercase() ?: "list"
+        val group = args.getOrNull(2)
+        val map = args.drop(3).joinToString(" ").ifEmpty { null }
+        val u = "/$label groups list | add <group> [map] | remove <group> [map]"
+
+        fun current(): Map<String, List<String>> {
+            val out = LinkedHashMap<String, List<String>>()
+            val sec = cfg.getConfigurationSection("arena-groups") ?: return out
+            for (k in sec.getKeys(false)) out[k] = sec.getStringList(k)
+            return out
+        }
+        fun save(updated: Map<String, List<String>>): Boolean {
+            cfg.set("arena-groups", null)
+            for ((k, v) in updated) cfg.set("arena-groups.$k", ArrayList(v))
+            if (updated.isEmpty()) cfg.createSection("arena-groups")
+            return try {
+                plugin.configs.saveConfig()
+                plugin.rebuild()
+                true
+            } catch (e: Exception) {
+                m.send(sender, "reload-failed", "error" to (e.message ?: "could not save"))
+                false
+            }
+        }
+
+        when (action) {
+            "list" -> {
+                val cur = current()
+                if (cur.isEmpty()) return m.send(sender, "groups-none")
+                m.sendRaw(sender, m.get("groups-header"))
+                for ((g, maps) in cur) {
+                    m.sendRaw(sender, m.get("groups-entry", "group" to g, "maps" to if (maps.isEmpty()) m.get("groups-all-maps") else maps.joinToString(", ")))
+                }
+            }
+            "add" -> {
+                if (group == null) return usage(sender, u)
+                if (group.contains('.')) return m.send(sender, "groups-bad-name")
+                val cur = LinkedHashMap(current())
+                val key = cur.keys.firstOrNull { it.equals(group, true) } ?: group
+                val maps = ArrayList(cur[key] ?: emptyList())
+                if (map == null) {
+                    if (cur.containsKey(key)) return m.send(sender, "groups-exists", "target" to key)
+                } else {
+                    if (maps.any { it.equals(map, true) }) return m.send(sender, "groups-exists", "target" to "$key/$map")
+                    maps.add(map)
+                }
+                cur[key] = maps
+                if (save(cur)) m.send(sender, "groups-added", "group" to key, "maps" to (if (map == null) " (all maps)" else ", map $map"))
+            }
+            "remove" -> {
+                if (group == null) return usage(sender, u)
+                val cur = LinkedHashMap(current())
+                val key = cur.keys.firstOrNull { it.equals(group, true) } ?: return m.send(sender, "groups-missing", "target" to group)
+                if (map == null) {
+                    cur.remove(key)
+                } else {
+                    val maps = ArrayList(cur[key] ?: emptyList())
+                    if (!maps.removeAll { it.equals(map, true) }) return m.send(sender, "groups-missing", "target" to "$key/$map")
+                    cur[key] = maps
+                    if (maps.isEmpty()) m.send(sender, "groups-now-all", "group" to key)
+                }
+                if (save(cur)) m.send(sender, "groups-removed", "target" to (if (map == null) key else "$key/$map"))
+            }
+            else -> usage(sender, u)
+        }
+    }
+
     private fun config(sender: CommandSender, args: Array<String>, label: String) {
         val path = args.getOrNull(1) ?: return usage(sender, "/$label config <path> [value]")
         val cfg = plugin.configs.config
@@ -243,6 +314,18 @@ class ArmedCommand(private val plugin: ArmedPlugin) : CommandExecutor, TabComple
                 2 -> filter(guns)
                 3 -> filter(listOf("add", "remove", "clear"))
                 else -> emptyList()
+            }
+            "groups" -> {
+                val cur = plugin.configs.config.getConfigurationSection("arena-groups")?.getKeys(false) ?: emptySet<String>()
+                when {
+                    args.size == 2 -> filter(listOf("list", "add", "remove"))
+                    args.size == 3 && args[1].equals("add", true) -> filter(dev.etran.armed.bedwars.BedWarsHook.groups())
+                    args.size == 3 && args[1].equals("remove", true) -> filter(cur)
+                    args.size == 4 && args[1].equals("add", true) -> filter(dev.etran.armed.bedwars.BedWarsHook.maps(args[2]))
+                    args.size == 4 && args[1].equals("remove", true) ->
+                        filter(plugin.configs.config.getStringList("arena-groups." + (cur.firstOrNull { it.equals(args[2], true) } ?: args[2])))
+                    else -> emptyList()
+                }
             }
             "config" -> if (args.size == 2) filter(configPaths()) else if (args.size == 3) filter(configValueHints(args[1])) else emptyList()
             else -> emptyList()
