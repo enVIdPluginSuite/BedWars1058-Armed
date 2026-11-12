@@ -53,6 +53,18 @@ If your network cannot reach `repo.andrei1058.com`, build against a jar instead:
 
 
 
+## Ammo items (optional)
+
+Off by default. For any gun, `ammo-item.enabled: true` makes reloading spend items from the player's inventory (any material: iron, diamonds, wool, arrows...), and `rounds-per-item` says how many bullets one item is worth. The items are taken when the reload finishes, so cancelling a reload is free; with none left the gun cannot reload. Set it in game:
+
+```
+/armed set rifle ammo-item-material hand      # the item you hold
+/armed set rifle ammo-item-rounds 5
+/armed set rifle ammo-item-enabled true
+```
+
+Matching ignores item data, so any wool colour counts as WOOL on 1.8-1.12.
+
 ## Files
 
 * `guns.yml` - every gun; the header documents each property

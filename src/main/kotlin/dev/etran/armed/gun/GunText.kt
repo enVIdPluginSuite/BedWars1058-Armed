@@ -22,7 +22,9 @@ object GunText {
             "horde" to g.horde,
             "skill" to g.skill,
             "cost" to plugin.currencies.costText(g, free),
-            "reserve" to (if (g.reserveLimited) g.reserveAmmo.toString() else "∞")
+            "reserve" to (if (g.reserveLimited) g.reserveAmmo.toString() else "∞"),
+            "ammo_item" to g.ammoItemLabel,
+            "ammo_rounds" to g.ammoRoundsPerItem
         )
     }
 
@@ -38,6 +40,8 @@ object GunText {
                 for (d in g.description) out += Text.color(d)
                 continue
             }
+            // lines about the ammo item only make sense for guns that use one
+            if (line.contains("{ammo_item}") && !g.ammoItemEnabled) continue
             out += Text.color(Text.fmt(Text.fmt(line, *base), *extra))
         }
         return out

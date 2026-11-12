@@ -3,8 +3,10 @@ package dev.etran.armed.gun
 import dev.etran.armed.ArmedPlugin
 import dev.etran.armed.bedwars.BedWarsHook
 import dev.etran.armed.util.ActionBar
+import dev.etran.armed.util.Mats
 import dev.etran.armed.util.Sounds
 import dev.etran.armed.util.Text
+import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.scheduler.BukkitRunnable
@@ -88,9 +90,47 @@ class GunController(private val plugin: ArmedPlugin) {
         startReload(player, slot, gun, state)
     }
 
+    /** The material a gun uses as ammo, or null when the gun does not use ammo items (the default). */
+    private fun ammoMaterial(gun: GunDefinition): Material? =
+        if (gun.ammoItemEnabled) Mats.resolve(gun.ammoItemMaterial.substringBefore(':')) else null
+
+    private fun countItems(player: Player, material: Material): Int {
+        var total = 0
+        for (item in player.inventory.contents) {
+            if (item != null && item.type == material) total += item.amount
+        }
+        return total
+    }
+
+    private fun takeItems(player: Player, material: Material, amount: Int) {
+        var left = amount
+        val inv = player.inventory
+        for (i in 0 until inv.size) {
+            if (left <= 0) break
+            val item = inv.getItem(i) ?: continue
+            if (item.type != material) continue
+            if (item.amount <= left) {
+                left -= item.amount
+                inv.setItem(i, null)
+            } else {
+                item.amount = item.amount - left
+                inv.setItem(i, item)
+                left = 0
+            }
+        }
+        Currencies.refresh(player)
+    }
+
+    /** Rounds still available for reloading: -1 = unlimited, otherwise the reserve or what the ammo items are worth. */
+    private fun reserveRounds(player: Player, gun: GunDefinition, state: GunState): Int {
+        val material = ammoMaterial(gun)
+        if (material != null) return countItems(player, material) * gun.ammoRoundsPerItem
+        return if (gun.reserveLimited) state.reserve else -1
+    }
+
     private fun startReload(player: Player, slot: Int, gun: GunDefinition, state: GunState) {
         if (state.reloading || state.ammo >= gun.clipSize) return
-        if (state.reserve == 0) {
+        if (state.reserve == 0 || reserveRounds(player, gun, state) == 0) {
             announce(player, gun, state)
             return
         }
@@ -141,7 +181,15 @@ class GunController(private val plugin: ArmedPlugin) {
         state.reloadTask = null
         state.reloading = false
         val needed = gun.clipSize - state.ammo
-        if (state.reserve < 0) {
+        val ammoItem = ammoMaterial(gun)
+        if (ammoItem != null) {
+            // the items are spent when the reload completes, so cancelling a reload costs nothing
+            val items = Math.min(countItems(player, ammoItem), (needed + gun.ammoRoundsPerItem - 1) / gun.ammoRoundsPerItem)
+            if (items > 0) {
+                takeItems(player, ammoItem, items)
+                state.ammo += Math.min(needed, items * gun.ammoRoundsPerItem)
+            }
+        } else if (state.reserve < 0) {
             state.ammo = gun.clipSize
         } else {
             val moved = Math.min(needed, state.reserve)
@@ -181,18 +229,22 @@ class GunController(private val plugin: ArmedPlugin) {
 
     fun announce(player: Player, gun: GunDefinition, state: GunState) {
         if (!plugin.settings.actionBar) return
+        val rounds = reserveRounds(player, gun, state)
+        val usesAmmoItem = ammoMaterial(gun) != null
         val key = when {
             state.reloading -> "action-bar-reloading"
+            state.ammo <= 0 && usesAmmoItem && rounds == 0 -> "action-bar-no-ammo"
             state.ammo <= 0 && state.reserve == 0 -> "action-bar-empty"
             else -> "action-bar"
         }
-        val reserveSuffix = if (gun.reserveLimited) plugin.messages.get("reserve-suffix", "reserve" to state.reserve) else ""
+        val reserveSuffix = if (rounds >= 0) plugin.messages.get("reserve-suffix", "reserve" to rounds) else ""
         val text = plugin.messages.get(
             key,
             "name" to Text.color(gun.displayName),
             "ammo" to state.ammo,
             "clip" to gun.clipSize,
-            "reserve" to state.reserve,
+            "reserve" to rounds,
+            "ammo_item" to gun.ammoItemLabel,
             "reserve_suffix" to reserveSuffix
         )
         if (text.isNotEmpty()) ActionBar.send(player, text)
