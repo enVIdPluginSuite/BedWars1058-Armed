@@ -46,11 +46,6 @@ object Mats {
         return null
     }
 
-    fun resolve(vararg names: String): Material? {
-        for (n in names) resolve(n)?.let { return it }
-        return null
-    }
-
     /** Builds an ItemStack from "MATERIAL" or "MATERIAL:data" (data is only honoured before 1.13). */
     @Suppress("DEPRECATION")
     fun stack(spec: String?, amount: Int = 1, fallback: String = "STICK"): ItemStack {
