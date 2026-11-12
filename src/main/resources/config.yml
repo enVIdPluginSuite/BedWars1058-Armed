@@ -81,6 +81,17 @@ shop-item:
   give-on-spawn: true
   give-on-respawn: true
 
+# The gun shop is a button inside the BedWars1058 item shop (main page and every category page).
+# Players can also open it with /armed shop.
+shop-button:
+  enabled: true
+  # Slot of the button in the BedWars1058 shop inventory; -1 = the first free slot of the top row.
+  slot: -1
+  material: DIAMOND_HOE
+  name: "&6&lArmed Guns"
+  lore:
+    - "&7Click to browse the guns."
+
 shop:
   title: "&8Armed - Gun Shop"
   # 1-6. Grows automatically when a gun is placed in a lower row.

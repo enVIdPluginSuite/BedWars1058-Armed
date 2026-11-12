@@ -38,6 +38,22 @@ object BedWarsHook {
 
     fun isPlaying(arena: IArena): Boolean = arena.status == GameState.playing
 
+    /**
+     * Whether [player] has a BedWars1058 item shop page open (main page or a category), asked through BedWars1058's
+     * viewer lists. Null when those lists cannot be reached, for example on a build with a different layout.
+     */
+    fun isShopViewer(player: Player): Boolean? =
+        try {
+            val index = viewers("com.andrei1058.bedwars.shop.main.ShopIndex", "getIndexViewers")
+            val category = viewers("com.andrei1058.bedwars.shop.main.ShopCategory", "getCategoryViewers")
+            index.contains(player.uniqueId) || category.contains(player.uniqueId)
+        } catch (_: Throwable) {
+            null
+        }
+
+    private fun viewers(className: String, method: String): Collection<*> =
+        Class.forName(className).getMethod(method).invoke(null) as Collection<*>
+
     /** True when [a] and [b] are on the same BedWars team. */
     fun sameTeam(arena: IArena, a: Player, b: Player): Boolean {
         val ta = arena.getTeam(a) ?: return false

@@ -2,6 +2,7 @@ package dev.etran.armed
 
 import dev.etran.armed.bedwars.BedWarsHook
 import dev.etran.armed.bedwars.BedWarsListener
+import dev.etran.armed.bedwars.ShopButtonListener
 import dev.etran.armed.command.ArmedCommand
 import dev.etran.armed.combat.Ballistics
 import dev.etran.armed.combat.GunListener
@@ -62,6 +63,7 @@ class ArmedPlugin : JavaPlugin() {
         pm.registerEvents(_root_ide_package_.dev.etran.armed.combat.GunListener(this), this)
         pm.registerEvents(_root_ide_package_.dev.etran.armed.shop.ShopListener(this), this)
         pm.registerEvents(_root_ide_package_.dev.etran.armed.bedwars.BedWarsListener(this), this)
+        pm.registerEvents(ShopButtonListener(this), this)
 
         val command = _root_ide_package_.dev.etran.armed.command.ArmedCommand(this)
         getCommand("armed")?.let {
