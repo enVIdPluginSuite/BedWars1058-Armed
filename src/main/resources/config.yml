@@ -38,7 +38,8 @@ settings:
   fire-rate-tolerance-ms: 30
   # Press the drop key (Q) to reload. Guns can never be dropped while this is true.
   reload-on-drop: true
-  reload-on-left-click: false
+  # Left-click (in the air, on a block or on a player) while holding a gun reloads it.
+  reload-on-left-click: true
   auto-reload: true
   cancel-reload-on-switch: true
   # Show reload progress on the experience bar.

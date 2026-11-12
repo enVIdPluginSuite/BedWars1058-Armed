@@ -22,6 +22,10 @@ import java.util.Random
 class Ballistics(private val plugin: dev.etran.armed.ArmedPlugin) {
     private val random = Random()
 
+    /** True while a bullet's damage is being applied, so listeners can tell it from a real punch. */
+    var firing = false
+        private set
+
     private class Hit(var damage: Double = 0.0, var headshot: Boolean = false)
 
     fun fire(shooter: Player, gun: dev.etran.armed.gun.GunDefinition) {
@@ -177,7 +181,12 @@ class Ballistics(private val plugin: dev.etran.armed.ArmedPlugin) {
         if (target.isDead) return
         val before = target.health
         if (s.ignoreDamageCooldown) target.noDamageTicks = 0
-        target.damage(hit.damage, shooter)
+        firing = true
+        try {
+            target.damage(hit.damage, shooter)
+        } finally {
+            firing = false
+        }
 
         val landed = target.isDead || target.health < before
         if (!landed) return

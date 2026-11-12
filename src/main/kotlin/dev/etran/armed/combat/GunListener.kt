@@ -5,6 +5,8 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
+import org.bukkit.event.entity.EntityDamageByEntityEvent
+import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.player.PlayerDropItemEvent
 import org.bukkit.event.player.PlayerInteractEvent
@@ -41,6 +43,15 @@ class GunListener(private val plugin: ArmedPlugin) : Listener {
         } else if (plugin.settings.reloadOnLeftClick) {
             plugin.controller.reload(player)
         }
+    }
+
+    /** A left click that hits a player is not an interact event, so punching with a gun reloads it as well. */
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    fun onPunch(e: EntityDamageByEntityEvent) {
+        if (plugin.ballistics.firing) return // our own bullets are attack events too
+        if (!plugin.settings.reloadOnLeftClick || e.cause != EntityDamageEvent.DamageCause.ENTITY_ATTACK) return
+        val player = e.damager as? org.bukkit.entity.Player ?: return
+        plugin.controller.reload(player)
     }
 
     @EventHandler(priority = EventPriority.HIGH)

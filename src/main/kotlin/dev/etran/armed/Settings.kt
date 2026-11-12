@@ -33,7 +33,7 @@ class Settings(c: FileConfiguration) {
     val soundRadius = c.getDouble("settings.sound-radius", 24.0).coerceIn(1.0, 256.0)
     val fireRateToleranceMs = c.getLong("settings.fire-rate-tolerance-ms", 30L).coerceIn(0L, 200L)
     val reloadOnDrop = c.getBoolean("settings.reload-on-drop", true)
-    val reloadOnLeftClick = c.getBoolean("settings.reload-on-left-click", false)
+    val reloadOnLeftClick = c.getBoolean("settings.reload-on-left-click", true)
     val autoReload = c.getBoolean("settings.auto-reload", true)
     val cancelReloadOnSwitch = c.getBoolean("settings.cancel-reload-on-switch", true)
     val reloadXpBar = c.getBoolean("settings.reload-xp-bar", true)

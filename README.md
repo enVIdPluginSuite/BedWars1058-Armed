@@ -19,7 +19,7 @@ If your network cannot reach `repo.andrei1058.com`, build against a jar instead:
 
 * Everybody gets the **Pistol** (free) at spawn and respawn.
 * Open the **Armed Guns** button in the BedWars1058 item shop (or run `/armed shop`). Guns are paid for with the resources in your inventory.
-* **Right-click** shoots (hold for automatic fire), **drop (Q)** reloads, empty guns auto-reload.
+* **Right-click** shoots (hold for automatic fire), **left-click** or **drop (Q)** reloads, empty guns auto-reload.
 * Guns are lost on death like any other item; starter guns come back on respawn.
 
 ## Commands (`/armed`, aliases `/guns`, `/gunshop`)
